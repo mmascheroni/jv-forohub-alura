@@ -3,11 +3,7 @@ package com.forohub.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.forohub.entity.Course;
-import com.forohub.entity.User;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
+import com.forohub.entity.UserAuthor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +30,7 @@ public class CommentDto {
 
     private boolean status;
 
-    private User author;
+    private UserAuthor author;
 
     private Course course;
 

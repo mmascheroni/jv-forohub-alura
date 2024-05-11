@@ -1,9 +1,12 @@
 package com.forohub.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Table(name = "courses")
@@ -25,4 +28,8 @@ public class Course {
     public void setNombre(String name) {
         this.name = name;
     }
+
+    @OneToMany(mappedBy = "course")
+    @JsonIgnore
+    private List<Comment> comments;
 }

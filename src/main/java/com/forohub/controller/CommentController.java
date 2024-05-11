@@ -31,7 +31,7 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<CommentDto> postComment(@Valid @RequestBody Comment comment) {
+    public ResponseEntity<CommentDto> postComment(@Valid @RequestBody Comment comment) throws ResourceNotFoundException {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.postComment(comment));
     }
 

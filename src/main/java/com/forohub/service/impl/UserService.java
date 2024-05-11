@@ -2,7 +2,9 @@ package com.forohub.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forohub.dto.UserDto;
-import com.forohub.entity.User;
+import com.forohub.entity.Role;
+import com.forohub.entity.UserAuthor;
+import com.forohub.exceptions.BadRequestException;
 import com.forohub.exceptions.ResourceNotFoundException;
 import com.forohub.repository.UserRepository;
 import com.forohub.service.IUserService;
@@ -10,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,43 +29,43 @@ public class UserService implements IUserService {
 
     @Override
     public List<UserDto> getUsers() {
-        List<User> users = userRepository.findAll();
-        List<UserDto> usersDto = users.stream().map(user -> objectMapper.convertValue(user, UserDto.class)).collect(Collectors.toList());
+        List<UserAuthor> userAuthors = userRepository.findAll();
+        List<UserDto> usersDto = userAuthors.stream().map(user -> objectMapper.convertValue(user, UserDto.class)).collect(Collectors.toList());
 
         if ( usersDto.size() > 0 ) {
             log.info("List of users found: " + usersDto);
+        } else {
+            log.warn("List of users are empty");
         }
-
-        log.warn("List of users are empty");
 
         return usersDto;
     }
 
     @Override
     public UserDto getUserById(Long id) throws ResourceNotFoundException {
-        Optional<User> user = userRepository.findById(id);
+        Optional<UserAuthor> user = userRepository.findById(id);
         UserDto userDto;
 
-        if ( user != null ) {
+        if ( user.isPresent() ) {
             userDto = objectMapper.convertValue(user, UserDto.class);
             log.info("User with id {} was found -> {} ", id, userDto);
             return userDto;
         }
 
-        log.error("The user with {} was not found", id);
+        log.error("The user with id {} was not found", id);
         throw new ResourceNotFoundException("Not found the user with id " + id);
     }
 
     @Override
-    public UserDto postUser(User user) {
-        User userSave = userRepository.save(user);
-        UserDto userDto = objectMapper.convertValue(userSave, UserDto.class);
-        log.info("User save successfully: {}", userDto);
+    public UserDto postUser(UserAuthor userAuthor) throws BadRequestException {
+        UserAuthor userAuthorSave = userRepository.save(userAuthor);
+        UserDto userDto = objectMapper.convertValue(userAuthorSave, UserDto.class);
+        log.info("User saved successfully: {}", userDto);
         return userDto;
     }
 
     @Override
-    public UserDto updateUser(User user) {
+    public UserDto updateUser(UserAuthor userAuthor) {
         return null;
     }
 

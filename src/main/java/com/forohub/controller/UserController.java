@@ -1,7 +1,8 @@
 package com.forohub.controller;
 
 import com.forohub.dto.UserDto;
-import com.forohub.entity.User;
+import com.forohub.entity.UserAuthor;
+import com.forohub.exceptions.BadRequestException;
 import com.forohub.exceptions.ResourceNotFoundException;
 import com.forohub.service.impl.UserService;
 import jakarta.validation.Valid;
@@ -30,8 +31,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> postUser(@Valid @RequestBody User user) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.postUser(user));
+    public ResponseEntity<UserDto> postUser(@Valid @RequestBody UserAuthor userAuthor) throws BadRequestException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.postUser(userAuthor));
     }
 
     @DeleteMapping("/{id}")
