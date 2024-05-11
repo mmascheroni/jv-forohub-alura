@@ -25,4 +25,6 @@ public class Course {
     public void setNombre(String name) {
         this.name = name;
     }
+
 }
+
