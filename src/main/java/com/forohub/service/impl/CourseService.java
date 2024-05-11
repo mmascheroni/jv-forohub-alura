@@ -43,7 +43,7 @@ public class CourseService implements ICourseService {
 
         if ( course != null ) {
             courseDto = objectMapper.convertValue(course, CourseDto.class);
-            log.info("Course with id {} was found", id);
+            log.info("Course with id {} was found -> {}", id, courseDto);
             return courseDto;
         }
 

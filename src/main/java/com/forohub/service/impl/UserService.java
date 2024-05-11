@@ -45,7 +45,7 @@ public class UserService implements IUserService {
 
         if ( user != null ) {
             userDto = objectMapper.convertValue(user, UserDto.class);
-            log.info("User found: " + userDto);
+            log.info("User with id {} was found -> {} ", id, userDto);
             return userDto;
         }
 
