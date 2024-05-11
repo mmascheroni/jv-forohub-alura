@@ -29,7 +29,9 @@ public class Course {
         this.name = name;
     }
 
+
     @OneToMany(mappedBy = "course")
     @JsonIgnore
     private List<Comment> comments;
 }
+

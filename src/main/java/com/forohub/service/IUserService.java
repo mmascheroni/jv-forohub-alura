@@ -6,7 +6,6 @@ import com.forohub.exceptions.BadRequestException;
 import com.forohub.exceptions.ResourceNotFoundException;
 
 import java.util.List;
-
 public interface IUserService {
 
     List<UserDto> getUsers();
