@@ -12,7 +12,7 @@ public interface ICommentService {
 
     CommentDto getCommentById(Long id) throws ResourceNotFoundException;
 
-    CommentDto postComment(Comment comment);
+    CommentDto postComment(Comment comment) throws ResourceNotFoundException;
 
     CommentDto updateComment(Comment comment);
 

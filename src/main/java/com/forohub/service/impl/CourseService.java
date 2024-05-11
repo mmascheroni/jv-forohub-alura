@@ -29,9 +29,9 @@ public class CourseService implements ICourseService {
 
         if ( coursesDto.size() > 0 ) {
             log.info("List of courses found: {}", coursesDto);
+        } else {
+            log.warn("List of course is empty");
         }
-
-        log.warn("List of course is empty");
 
         return coursesDto;
     }
@@ -41,7 +41,7 @@ public class CourseService implements ICourseService {
         Optional<Course> course = courseRepository.findById(id);
         CourseDto courseDto;
 
-        if ( course != null ) {
+        if ( course.isPresent() ) {
             courseDto = objectMapper.convertValue(course, CourseDto.class);
             log.info("Course with id {} was found -> {}", id, courseDto);
             return courseDto;

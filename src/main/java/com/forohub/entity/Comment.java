@@ -2,6 +2,7 @@ package com.forohub.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,13 +28,17 @@ public class Comment {
 
     private boolean status;
 
-    @NotBlank(message = "The author cannot be empty")
-    private User author;
+    @ManyToOne
+    @JoinColumn(name = "author_comment_id")
+    @NotNull(message = "The author field is required")
+    private UserAuthor author;
 
-    @NotBlank(message = "The course cannot be empty")
+    @ManyToOne
+    @JoinColumn(name = "course_comment_id")
+    @NotNull(message = "The course field is required")
     private Course course;
 
-    public Comment(String title, String message, LocalDate dateCreation, boolean status, User author, Course course) {
+    public Comment(String title, String message, LocalDate dateCreation, boolean status, UserAuthor author, Course course) {
         this.title = title;
         this.message = message;
         this.dateCreation = dateCreation;
@@ -58,7 +63,7 @@ public class Comment {
         this.status = status;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(UserAuthor author) {
         this.author = author;
     }
 
