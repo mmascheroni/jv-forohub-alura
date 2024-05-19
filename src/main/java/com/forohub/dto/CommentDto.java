@@ -30,7 +30,7 @@ public class CommentDto {
 
     private boolean status;
 
-    private UserAuthor author;
+    private UserDto author;
 
     private Course course;
 
