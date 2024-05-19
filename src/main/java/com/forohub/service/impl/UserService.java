@@ -10,6 +10,7 @@ import com.forohub.repository.UserRepository;
 import com.forohub.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
@@ -26,6 +27,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public List<UserDto> getUsers() {
@@ -58,6 +62,8 @@ public class UserService implements IUserService {
 
     @Override
     public UserDto postUser(UserAuthor userAuthor) throws BadRequestException {
+        String passwordEncoder = bCryptPasswordEncoder.encode(userAuthor.getPassword());
+        userAuthor.setPassword(passwordEncoder);
         UserAuthor userAuthorSave = userRepository.save(userAuthor);
         UserDto userDto = objectMapper.convertValue(userAuthorSave, UserDto.class);
         log.info("User saved successfully: {}", userDto);
