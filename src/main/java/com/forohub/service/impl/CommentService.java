@@ -14,6 +14,7 @@ import com.forohub.repository.UserRepository;
 import com.forohub.service.ICommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,7 +40,14 @@ public class CommentService implements ICommentService {
     @Override
     public List<CommentDto> getComments() {
         List<Comment> comments = commentRepository.findAll();
-        List<CommentDto> commentsDto = comments.stream().map(comment -> objectMapper.convertValue(comment, CommentDto.class)).collect(Collectors.toList());
+        List<CommentDto> commentsDto = comments.stream().map(comment -> {
+            UserAuthor userAuthor = userRepository.findById(comment.getAuthor().getId()).orElse(null);
+            UserDto userDto = objectMapper.convertValue(userAuthor, UserDto.class);
+            CommentDto commentDto = objectMapper.convertValue(comment, CommentDto.class);
+            commentDto.setAuthorDto(userDto);
+
+            return commentDto;
+        }).collect(Collectors.toList());
         if ( commentsDto.size() > 0 ) log.info("List of Comments found {}", commentsDto);
         else log.warn("List of comments is empty");
         return commentsDto;
@@ -51,7 +59,10 @@ public class CommentService implements ICommentService {
         CommentDto commentDto;
 
         if (comment.isPresent()) {
+            UserAuthor userAuthor = userRepository.findById(comment.get().getAuthor().getId()).orElse(null);
+            UserDto userDto = objectMapper.convertValue(userAuthor, UserDto.class);
             commentDto = objectMapper.convertValue(comment, CommentDto.class);
+            commentDto.setAuthorDto(userDto);
             log.info("Comment with id {} was found: {}", id, commentDto);
             return commentDto;
         }
@@ -67,6 +78,7 @@ public class CommentService implements ICommentService {
         Course course = courseRepository.findById(idCourse).orElse(null);
         UserAuthor userAuthor = userRepository.findById(idUser).orElse(null);
 
+
         if ( course == null && userAuthor == null) {
             log.error("The course with {] and the author with {} not exists", idCourse, idUser);
             throw new ResourceNotFoundException("The course with id '" + idCourse + "' and the author with id '" + idUser + "' not exists");
@@ -80,8 +92,9 @@ public class CommentService implements ICommentService {
 
         Comment commentSave = commentRepository.save(comment);
         CommentDto commentDto = objectMapper.convertValue(commentSave, CommentDto.class);
+        UserDto userDto = objectMapper.convertValue(userAuthor, UserDto.class);
         if ( course != null ) commentDto.setCourse(course);
-        if ( userAuthor != null ) commentDto.setAuthor(userAuthor);
+        if ( userDto != null ) commentDto.setAuthorDto(userDto);
         log.info("Comment save successfully -> {}", commentDto);
         return commentDto;
     }
